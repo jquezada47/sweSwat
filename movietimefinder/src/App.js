@@ -47,7 +47,7 @@ function App() {
 
 
 
-    <form method="POST" action="http://localhost:3001/login">
+    <form method="POST" action="http://localhost:3001/purchase">
 
     Purchase
     <br/>

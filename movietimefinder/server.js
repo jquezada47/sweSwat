@@ -54,10 +54,12 @@ server.post("/login",urlencodedParser, (req, res) => {
     //check is user is in test database
     var isLogin = testUser(emailLogin,passwordLogin);
     //save to a string
-    var login ="Email: "+emailLogin + "<br/>password: " +passwordLogin + "<br/>login: " + isLogin ;
+	var login ="Email: "+emailLogin + "<br/>password: " +passwordLogin + "<br/>login: " + isLogin ;
+	res.send(login);
 
+});
 
-
+server.post("/purchase", (req,res) =>{
 
     //get credit card info and call check methods 
     var nameCheck = checkName(req.body.name);

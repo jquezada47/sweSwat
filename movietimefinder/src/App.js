@@ -28,19 +28,19 @@ function App() {
   return (
     <div className="App">
 
-    <div>
+    <div class="form">
 
 
     <form method="POST" action="http://localhost:3001/login">
-    Login
+    <span class="large">Login</span>
     <br/>
-    Email:<input type="text" name="emailLogin"/> 
+    Email:<input type="text" name="emailLogin" placeholder="Enter E-mail"/> 
     <br/>
-    Password:<input type="text" name="passwordLogin"/> 
+    Password:<input type="text" name="passwordLogin" placeholder="Enter Password"/> 
     <br/>
 
     <input type="submit" value="LOGIN"/>
-    <hr/>
+    <br/><br/><hr/>
     </form>
 
 
@@ -49,22 +49,20 @@ function App() {
 
     <form method="POST" action="http://localhost:3001/purchase">
 
-    Purchase
+    <span class="large">Purchase</span>
     <br/>
-    Name:<input type="text" name="name"/> 
+    Name:<input type="text" name="name" placeholder="Enter Name"/> 
     <br/>
 
-    Email:<input type="text" name="email"/> 
+    Email:<input type="text" name="email" placeholder="Enter E-mail"/> 
     <br/><br/>
 
-    Card Number:<input type="text" name="card_num"/> 
+    Card Number:<input type="text" name="card_num" placeholder="Enter Card Number"/> 
     <br/>
-
-    Experation Month:<input type="text" name="expr_month"/> 
+    Expiration (MM/YY):<input type="text" name="expiration" placeholder="MM/YY"/> 
+    
     <br/>
-    Experation Year:<input type="text" name="expr_year"/>
-    <br/>
-    CVV number:<input type="text" name="cvv"/> 
+    CVV number:<input type="text" name="cvv" placeholder="3 digit"/> 
 
     <br/>
     <input type="submit" value="Purchase"/>

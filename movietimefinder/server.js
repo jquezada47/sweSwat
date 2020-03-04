@@ -43,47 +43,56 @@ server.get("/", (req, res) => {
 server.post("/login",urlencodedParser, (req, res) => {
 	//res.redirect(3001,"http://localhost:3001/");
 
-	//get login email and password
-	var emailLogin = req.body.emailLogin;
-	var passwordLogin = req.body.passwordLogin;
+	//get login info from form in req object
+	var email = req.body.emailLogin;
+	var password = req.body.passwordLogin;
 
-    //check email and password and convert to boolean
-    emailLogin = checkEmail(emailLogin);
-    passwordLogin = checkPassword(passwordLogin);
+	//call login function and save result string
+	var login = checkLogin(email,password);
 
-    //check is user is in test database
-    var isLogin = testUser(emailLogin,passwordLogin);
-    //save to a string
-	var login ="Email: "+emailLogin + "<br/>password: " +passwordLogin + "<br/>login: " + isLogin ;
+	//print the result string
 	res.send(login);
 
 });
 
-server.post("/purchase", (req,res) =>{
+server.post("/purchase",urlencodedParser, (req,res) =>{
 
-    //get credit card info and call check methods 
-    var nameCheck = checkName(req.body.name);
-    var emailCheck = checkEmail(req.body.email);
-    var cardCheck = valid_credit_card(req.body.card_num);
-    var monthCheck = checkMonth(req.body.expr_month);
-    var yearCheck = checkYear(req.body.expr_year);
-    var yearCVV = checkCVV(req.body.cvv);
+	//get credit card info from form in req object
+	var name = req.body.name;
+	var email = req.body.email;
+	var cardNum = req.body.card_num;
+	var expiration = req.body.expiration;
+	var cvv = req.body.cvv;
 
-    //Save results to string
-    var purchase = "Name: "+nameCheck +"<br/>Email: "+ emailCheck+"<br/>Card Num: "+ cardCheck 
-    +"<br/>expr month: " + monthCheck + "<br/>expr year: " + yearCheck + "<br/>CVV: " +yearCVV;
+    //call purchase method to validate form
+    var purchase = checkPurchase(name, email, cardNum, expiration, cvv);
 
     //Print the strings
-    res.send(login + "<br/><br/><br/>" + purchase);
+    res.send(purchase);
 });
 
 
+function checkLogin(email,password){
+	//calls email checking method
+	var emailCheck = checkEmail(email)
+	//calls password checking method 
+	var passwordCheck = checkPassword(password) 
+	//calls user DATABASE checking method
+	var isLogin = testUser(email, password);
+
+	if(isLogin)
+		var result = "<br/>login SUCCESSFUL";
+	else
+		var result = "<br/>login FAILED";
+
+
+	return "Email: "+emailCheck+"<br/>password: " +passwordCheck + "<br/>login: " + isLogin +""+result;
+}
 
 function checkEmail(mail) 
 {
 	if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail))
 		return (true)
-	
 	return (false)
 }
 
@@ -94,7 +103,6 @@ function checkPassword(password)
     var re = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
     return re.test(password);
 }
-
 
 function testUser(email,pass){
 	var testEmail = "user@gmail.com";
@@ -107,8 +115,30 @@ function testUser(email,pass){
 }
 
 
+function checkPurchase(name, email, cardNum, expiration, cvv){
+	 //get credit card info and call check methods 
+	 var nameCheck = checkName(name);
+	 var emailCheck = checkEmail(email);
+	 var cardCheck = valid_credit_card(cardNum);
+	 var expirCheck = checkExpiration(expiration);
+	 var cvvCheck = checkCVV(cvv);
+
+    //Save results to string
+    var purchase = "Name: "+nameCheck +"<br/>Email: "+ emailCheck+"<br/>Card Num: "+ cardCheck 
+    +"<br/>experation: " + expirCheck + "<br/>CVV: " +cvvCheck;
+
+    if(nameCheck&&emailCheck&& cardCheck&&expirCheck &&cvvCheck )
+    	purchase=purchase+"<br/>purchase SUCCESSFUL";
+    else
+    	purchase=purchase+"<br/>purchase FAILED";
+
+    return purchase;
+}
+
+
+
 function checkName(name){
-	if( /^[a-zA-Z]+$/.test(name) )
+	if( /^[a-zA-Z ]+$/.test(name) && name.length <=30 && name.length >1)
 		return true;
 	else
 		return false;
@@ -117,6 +147,9 @@ function checkName(name){
 function valid_credit_card(value) {
 	//https://gist.github.com/DiegoSalazar/4075533
   // Accept only digits, dashes or spaces
+  if (value=="" || value.length<16 || value.length >19)
+  	return (false)
+
   if (/[^0-9-\s]+/.test(value)) return false;
 
 	// The Luhn Algorithm. It's so pretty.
@@ -136,19 +169,22 @@ function valid_credit_card(value) {
 	return (nCheck % 10) == 0;
 }
 
-function checkMonth(value){
-	if(value>0 && value <=12)
+function checkExpiration(value){
+	if(/^(\d{1,2})\/\d{1,2}$/.test(value)){
+
+		var i = value.indexOf("/");
+		var sub1 = value.substring(0,i)
+		var sub2 = value.substring(i+1,value.length)
+		console.log(sub1 + " " +sub2);
+		if(sub1<1||sub1>12|sub2<21||sub2>50)
+			return false
+		
 		return true
+	}
 	else 
 		return false
 }
 
-function checkYear(value){
-	if(value>2020 && value <=2050)
-		return true
-	else 
-		return false
-}
 
 function checkCVV(value){
 	if(value>99 && value <=999)

@@ -31,6 +31,11 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false })
 server.listen(port, () => {
 	console.log(`Server listening of port ${port}`);
 	console.log(`Root folder at ${root}`);
+	database.connect((err) =>{
+		if(err)
+			throw err;
+		console.log("Database Connection Successfull");
+	});
 });
 
 server.get("/", (req, res) => {

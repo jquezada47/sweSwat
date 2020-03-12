@@ -1,0 +1,6 @@
+{
+    "workbench.colorTheme": "Visual Studio Dark",
+    "javascript.format.semicolons": "insert",
+    "prettier.tabWidth": 4,
+    "prettier.useTabs": true
+}

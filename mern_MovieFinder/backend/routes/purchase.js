@@ -1,10 +1,10 @@
 const router = require('express').Router();
-let Purchase = require('../models/purchase.model');
+let Ticket = require('../models/ticket.model');
 
 
 router.route('/').get((req, res) => {
-  Purchase.find()
-  .then(purchase => res.json(purchasecase))
+  Ticket.find()
+  .then(tickey => res.json(ticketcase))
   .catch(err => res.status(400).json('Error: ' + err));
 });
 
@@ -18,18 +18,26 @@ router.route('/add').post((req, res) => {
 
   console.log(checkPurchase(name, email, cardnum, expiration, CVV))
 
-  const newPurchase= new Purchase({
-   name,
-   email,
-   cardnum,
-   expiration,
-   CVV
+  let price = 10
+  let type = "regular"
+  let showID = 123
+  let userID = 123
+  let movieID = 123
+  let siteID = 123
+
+  const newTicket= new Ticket({
+   price,
+  type,
+   showID,
+   userID ,
+   movieID,
+   siteID,
  });
   if(checkPurchase(name, email, cardnum, expiration, CVV)){
-    newPurchase.save()
-    .then(() => res.json('Purchase added!'))
+    newTicket.save()
+    .then(() => res.json('Ticket added!'))
     .catch(err => res.status(400).json('Error: ' + err));
-    console.log("Purchase added" +name+" "+email+" "+cardnum+" "+expiration+" "+CVV)
+    console.log("Ticket added" +name+" "+email+" "+cardnum+" "+expiration+" "+CVV)
   }
   else
     console.log("WRONG FORMAT")

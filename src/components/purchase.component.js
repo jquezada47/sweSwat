@@ -57,16 +57,18 @@ export default class Purchase extends Component {
     }
 
     axios.post('http://localhost:5000/purchase/add', purchase)
-    .then(res => console.log(res.data));
+    .then(res => {
+      console.log(res.data)
+      this.setState({
+          name: '',
+          email: '',
+          cardnum: 0,
+          expiration: '',
+          CVV: 0,
+      });
 
-    this.setState({
-     name: '',
-     email: '',
-     cardnum: 0,
-     expiration: '',
-     CVV: 0
-   })
-
+      window.location = 'http://localhost:3000/';
+    });
   }
 
 

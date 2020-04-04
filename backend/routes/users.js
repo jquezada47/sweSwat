@@ -11,7 +11,7 @@ router.route('/').get((req, res) => {
     // get all the users and return in json format
     .then(users => res.json(users))
     //error handling
-    .catch(err => res.status(400).json('Error: ' + err));
+    .catch(err => res.status(500).json('Error: ' + err));
   });
 
 
@@ -35,8 +35,8 @@ router.route('/add').post((req, res) => {
   //save to the DB
   newUser.save()
   // then return 'user added' in json
-  .then(() => res.json('User added!'))
-  .catch(err => res.status(400).json('Error: ' + err));
+  .then(() => res.json(true))
+  .catch(err => res.status(500).json('Error: ' + err));
 
   console.log(email + " "+ password + " "+name + " "+birth)
 });
@@ -65,6 +65,10 @@ router.route('/in').post((req, res) => {
          console.log("Logged In: "+ email + " "+ password)
        }
      })
+     res.json(true)
+  }
+  else{
+    res.json(false)
   }
   
 });

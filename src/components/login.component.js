@@ -2,49 +2,66 @@ import React, { Component } from 'react';
 import axios from 'axios';
 
 export default class Login extends Component {
-  constructor(props) {
-    super(props);
+    constructor(props) {
+        super(props);
 
-    this.onChangeEmail= this.onChangeEmail.bind(this);
-    this.onChangePassword= this.onChangePassword.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
+        this.onChangeEmail= this.onChangeEmail.bind(this);
+        this.onChangePassword= this.onChangePassword.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
 
-    this.state = {
-      email: '',
-      password: '',
-      users: []
+        this.state = {
+            email: '',
+            password: '',
+            users: [],
+            valid: false,
+            redirect: '',
+        }
     }
 
-  }
-
-
-  onChangeEmail(e) {
-    this.setState({email: e.target.value})
-  }
-
-  onChangePassword(e) {
-    this.setState({password: e.target.value})
-  }
-
-  
-  onSubmit(e) {
-    e.preventDefault();
-    const user = {
-      email: this.state.email,
-      password: this.state.password
+    onChangeEmail(e) {
+        this.setState({email: e.target.value})
     }
 
-    console.log(user);
+    onChangePassword(e) {
+        this.setState({password: e.target.value})
+    }
 
-    axios.post('http://localhost:5000/users/in', user)
-    .then(res => console.log(res.data));
 
-    this.setState({
-      email: '',
-      password: ''
-    })
-    
-  }
+    onSubmit(e) {
+        e.preventDefault();
+        const user = {
+            email: this.state.email,
+            password: this.state.password
+        }
+
+        console.log(user);
+
+        axios.post("http://localhost:5000/users/in", user).then((res) => {
+            // console.log(res.data);
+            this.setState({
+                valid: res.data,
+            });
+
+            this.setState({
+                email: '',
+                password: ''
+            })
+
+            if (this.state.valid) {
+                console.log("Logged in");
+                this.setState({
+                    redirect: "http://localhost:3000/",
+                });
+
+            } else {
+                console.log("Try again");
+                this.setState({
+                    redirect: "http://localhost:3000/login",
+                });
+            }
+            window.location = this.state.redirect
+        });
+    }
 
 
   render() {

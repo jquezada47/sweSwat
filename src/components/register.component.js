@@ -19,8 +19,9 @@ export default class Register extends Component {
       password: '',
       name: '',
       birth: new Date(),
-      
-    }
+      valid: false,
+      redirect: "http://localhost:3000/register",
+    };
   }
 
 
@@ -40,7 +41,6 @@ export default class Register extends Component {
     this.setState({birth: e})
   }
 
-
   onSubmit(e) {
     e.preventDefault();
 
@@ -51,8 +51,12 @@ export default class Register extends Component {
       birth: this.state.birth
     }
 
-    axios.post('http://localhost:5000/users/add', user)
-    .then(res => console.log(res.data));
+    axios.post("http://localhost:5000/users/add", user)
+    .then((res) => {
+      console.log(res.data);
+      this.setState({
+        valid: res.data,
+      });
 
     this.setState({
       email: '',
@@ -61,6 +65,12 @@ export default class Register extends Component {
       birth: ''
     })
 
+    if (this.state.valid) {
+        this.setState({redirect: 'http://localhost:3000/'})
+    }
+    // window.location = "http://localhost:3000/";
+      window.location = this.state.redirect
+    });
   }
 
 

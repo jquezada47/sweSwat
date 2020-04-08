@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-
+// I Meant to remove this lines 5-32,
+// I replaced this with stuff in the render()
 const Movie = props => (
   <tr>
   <td><img src={require("./"+props.movies.title+".png")}  alt="sonic"width="150"/></td>

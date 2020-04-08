@@ -23,24 +23,32 @@ router.route('/add').post((req, res) => {
   const name = req.body.name;
   const birth = Date.parse(req.body.birth);
 
-  
-  // create new instance of user
-  const newUser = new User({
-  	email,
-  	password,
-  	name,
-  	birth
-  });
+  if(checkLogin(email,password) && checkName(name)){
+    // create new instance of user
+    const newUser = new User({
+    	email,
+    	password,
+    	name,
+    	birth
+    });
 
-  //save to the DB
-  newUser.save()
-  // then return 'user added' in json
-  .then(() => res.json(true))
-  .catch(err => res.status(500).json('Error: ' + err));
+    //save to the DB
+    newUser.save()
+    // then return 'user added' in json
+    .then(() => res.json(true))
+    .catch(err => res.status(500).json('Error: ' + err));
 
-  console.log(email + " "+ password + " "+name + " "+birth)
+    console.log(email + " "+ password + " "+name + " "+birth)
+
+    res.json(true)
+
+  }else{
+
+    res.json(false)
+
+  }
+
 });
-
 
 
 // LOGIN checks if matches in DB
@@ -65,13 +73,14 @@ router.route('/in').post((req, res) => {
          console.log("Logged In: "+ email + " "+ password)
        }
      })
-     res.json(true)
+    res.json(true)
   }
   else{
     res.json(false)
   }
   
 });
+
 
 
 //**Previous functions to check format of inputs
@@ -99,6 +108,14 @@ function checkPassword(password)
     // at least six characters
     var re = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
     return re.test(password);
+  }
+
+
+  function checkName(name){
+    if( /^[a-zA-Z ]+$/.test(name) && name.length <=30 && name.length >1)
+      return true;
+    else
+      return false;
   }
 
 // exporting the router 

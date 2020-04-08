@@ -58,17 +58,25 @@ export default class Register extends Component {
         valid: res.data,
       });
 
-    this.setState({
-      email: '',
-      password: '',
-      name: '',
-      birth: ''
-    })
+      this.setState({
+        email: '',
+        password: '',
+        name: '',
+        birth: ''
+      })
 
-    if (this.state.valid) {
-        this.setState({redirect: 'http://localhost:3000/'})
-    }
-    // window.location = "http://localhost:3000/";
+      if (this.state.valid) {
+       
+        this.setState({
+          redirect: "http://localhost:3000/",
+        });
+
+      } else {
+        console.log("Try again");
+        this.setState({
+          redirect: "http://localhost:3000/register",
+        });
+      }
       window.location = this.state.redirect
     });
   }
@@ -84,8 +92,8 @@ export default class Register extends Component {
      <label for="exampleInputEmail1">Email address</label>
      <input type="email" class="form-control" id="exampleInputEmail1" 
      required value={this.state.email} onChange={this.onChangeEmail}/>
-    
-    
+     
+     
      <div class="form-group">
      <label for="exampleInputPassword1">Password</label>
      <input type="password" class="form-control" id="exampleInputPassword1" 

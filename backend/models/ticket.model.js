@@ -7,8 +7,8 @@ const ticketSchema = new Schema({
 	type: { type: String },
 	showID: { type: Number },
 	userID: { type: String },
-	movieID: { type: Number },
-	siteID: { type: Number}
+	movieTitle: { type: String },
+	siteName: { type: String}
 }, {
 	timestamps: true,
 });

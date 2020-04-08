@@ -1,15 +1,6 @@
 const router = require('express').Router();
 let Ticket = require('../models/ticket.model');
 
-/*
-router.route('/').get((req, res) => {
-  Ticket.find()
-  .then(ticket => res.json(ticketcase))
-  .catch(err => res.status(400).json('Error: ' + err));
-});
-*/
-
-
 // Inserts a new ticket in DB
 router.route('/add').post((req, res) => {
   const name= req.body.name;
@@ -18,14 +9,13 @@ router.route('/add').post((req, res) => {
   const expiration= req.body.expiration;
   const CVV= req.body.CVV;
 
-  console.log(checkPurchase(name, email, cardnum, expiration, CVV))
-
   // fake placeholder fir now until all DB table made
   let price = 10
   let type = "regular"
   let showID = 123
   let userID = 123
-  let movieID = 123
+  let movieTitle = req.body.movieTitle
+  console.log(movieTitle)
   let siteID = 123
 
   const newTicket= new Ticket({
@@ -33,7 +23,7 @@ router.route('/add').post((req, res) => {
    type,
    showID,
    userID ,
-   movieID,
+   movieTitle,
    siteID,
  });
 
@@ -41,10 +31,15 @@ router.route('/add').post((req, res) => {
     newTicket.save()
     .then(() => res.json('Ticket added!'))
     .catch(err => res.status(400).json('Error: ' + err));
-    console.log("Ticket added" +name+" "+email+" "+cardnum+" "+expiration+" "+CVV)
-  }
-  else
+    console.log("Ticket added " +movieTitle)
+
+    res.json(true)
+
+  } else {
     console.log("WRONG FORMAT")
+    res.json(false)
+  }
+
 });
 
 
@@ -117,7 +112,6 @@ function checkExpiration(value){
     var i = value.indexOf("/");
     var sub1 = value.substring(0,i)
     var sub2 = value.substring(i+1,value.length)
-    console.log(sub1 + " " +sub2);
     if(sub1<1||sub1>12|sub2<21||sub2>50)
       return false
     

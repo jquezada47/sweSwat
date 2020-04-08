@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
 import axios from 'axios';
- 
+
 
 export default class Purchase extends Component {
 
+  componentDidMount(){
+    const {handle } = this.props.match.params
+    const {title} = this.props.location.state
+    console.log(this.props.location.state.title)
+  }
 
   constructor(props) {
     super(props);
@@ -19,7 +24,8 @@ export default class Purchase extends Component {
       email: '',
       cardnum: 0,
       expiration: 'MM/YY',
-      CVV: 0
+      CVV: 0,
+       movieTitle: this.props.location.state.title
     }
 
   }
@@ -43,40 +49,73 @@ export default class Purchase extends Component {
   onChangeCVV(e) {
     this.setState({ CVV: e.target.value})
   }
+  title(e) {
+    const {handle } = this.props.match.params
+    const {title} = this.props.location.state
+    console.log({title})
+    return {title}
+  }
 
 
   onSubmit(e) {
     e.preventDefault();
+
+    console.log(this.props.location.state.title)
+   
 
     const purchase = {
       name: this.state.name,
       email: this.state.email,
       cardnum: this.state.cardnum,
       expiration: this.state.expiration,
-      CVV: this.state.CVV
+      CVV: this.state.CVV,
+      movieTitle: this.props.location.state.title
     }
+
+    
 
     axios.post('http://localhost:5000/purchase/add', purchase)
     .then(res => {
       console.log(res.data)
+
       this.setState({
-          name: '',
-          email: '',
-          cardnum: 0,
-          expiration: '',
-          CVV: 0,
+        valid: res.data,
+      });
+      this.setState({
+        name: '',
+        email: '',
+        cardnum: 0,
+        expiration: '',
+        CVV: 0,
       });
 
-      window.location = 'http://localhost:3000/';
+      if (this.state.valid) {
+        console.log("Puchased!");
+        this.setState({
+          redirect: "http://localhost:3000/",
+        });
+
+      } else {
+        console.log("Try again");
+        this.setState({
+          redirect: "http://localhost:3000/purchase",
+        });
+      }
+      window.location = this.state.redirect
     });
   }
 
 
   render() {
+
     return (
      <form onSubmit={this.onSubmit}>
 
-     <h3>Purchase</h3>
+     <h3>Purchasing tickets for "{this.props.location.state.title}" at {this.props.location.state.showtime} </h3>
+
+      Movie<br/>
+     <input type="text"  value={this.props.location.state.title}/>
+     <br/>
 
      Name<br/>
      <input type="text"  id="name" required value={this.state.name}

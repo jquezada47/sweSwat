@@ -28,17 +28,12 @@ export default class Navbar extends Component {
         <Link to="/search" className="nav-link">Search</Link>
         </li>
 
-        <li className="navbar-item">
-        <Link to="/results" className="nav-link">SearchResults</Link>
-        </li>
 
         <li className="navbar-item">
         <Link to="/purchase" className="nav-link">Purchase</Link>
         </li>
 
-         <li className="navbar-item">
-        <Link to="/createmovie" className="nav-link">Create Movie</Link>
-        </li>
+    
 
       </ul>
       </nav>

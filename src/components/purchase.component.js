@@ -111,7 +111,8 @@ export default class Purchase extends Component {
     return (
      <form onSubmit={this.onSubmit}>
 
-     <h3>Purchasing tickets for "{this.props.location.state.title}" at {this.props.location.state.showtime} </h3>
+     <h3>Purchasing tickets for "{this.props.location.state.title}" <br/>
+     at {this.props.location.state.showtime}  at {this.props.location.state.theater}</h3>
 
       Movie<br/>
      <input type="text"  value={this.props.location.state.title}/>

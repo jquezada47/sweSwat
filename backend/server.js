@@ -6,7 +6,6 @@ const mongoose = require('mongoose');
 //configures so variables in the env file?
 //require('dotenv').config();
 
-
 //create express server on port 5000
 const app = express();
 const port = process.env.PORT || 5000;

@@ -2,43 +2,15 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-
-const Movie = props => (
-  <tr>
-  <td><img src={require("./"+props.movies.title+".png")}  alt="sonic"width="150"/></td>
-  <td>{props.movies.title}</td>
-  <td>{props.movies.year}</td>
-  <td>{props.movies.genre}</td>
-  <td>{props.movies.age}</td>
-  
-  <td>
-
-
-
-  <a href="/purchase" class="btn btn-primary" >Purchase with Us </a>
-  <br/>
-
-
-  <button type="button" class="btn btn-dark" 
-  onClick={()=> window.open(props.movies.amc, "_blank")}>Purchase with AMC</button>
-  <br/>
-  <button type="button" class="btn btn-secondary" 
-  onClick={()=> window.open(props.movies.regal, "_blank")}>Purchase with Regal</button>
-  /
-  </td>
-
-  
-  </tr>
-  )
-
 export default class Search extends Component {
   constructor(props) {
     super(props);
 
     this.onChangeSearch = this.onChangeSearch.bind(this);
+    this.onChangeLocation = this.onChangeLocation.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
 
-    this.state = {movies: []};
+    this.state = {days: []};
   }
 
 
@@ -48,19 +20,25 @@ export default class Search extends Component {
     })
   }
 
+  onChangeLocation(e) {
+    this.setState({
+      location: e.target.value
+    })
+  }
+
 
   onSubmit(e) {
     e.preventDefault();
 
     const search = {
-      search: this.state.search
+      search: this.state.search,
+      location: this.state.location
     }
-
-    console.log(search);
 
     axios.post('http://localhost:5000/movie/search', search)
     .then(res => {
-      this.setState({ movies: res.data })
+      this.setState({ days: res.data })
+      console.log(res.data)
     });
 
     this.setState({
@@ -69,15 +47,10 @@ export default class Search extends Component {
   }
 
 
-  movieList() {
-    return this.state.movies.map(currentmovie => {
-      return <Movie movies={currentmovie}/>;
-    })
-  }
+  render() { 
 
-
-  render() {
     return (
+
       <div>
       <h3>Search</h3>
       <form onSubmit={this.onSubmit}>
@@ -85,6 +58,13 @@ export default class Search extends Component {
       <label>Search: </label>
       <input  type="text" required className="form-control"
       value={this.state.search} onChange={this.onChangeSearch}/>
+
+
+      <label>Location:(not working)</label>
+      <input  type="text" className="form-control"
+      value={this.state.location} onChange={this.onChangeLocation}/>
+
+
       </div>
       <div className="form-group">
       <input type="submit" value="Search" className="btn btn-primary" />
@@ -92,60 +72,82 @@ export default class Search extends Component {
       </form>
 
 
-      
-      <h3>Logged Movies</h3>
       <table className="table">
-      <thead className="thead-light">
-      <tr>
-      <th>Image</th>
-      <th>Title</th>
-      <th>Year</th>
-      <th>Genre</th>
-      <th>Age Rating</th>
-      <th>Showtimes</th>
-      <th>Purchase</th>
-      </tr>
-      </thead>
+
       <tbody>
 
-      {this.state.movies.map(movies => (
+      {this.state.days.map( days =>(
+        <div>
 
-       <tr>
-       <td><img src={require("./"+movies.title+".png")}  alt="sonic"width="150"/></td>
-       <td> <a href="/info" class="btn btn-info"> {movies.title} </a> </td>
-       <td>{movies.year}</td>
-       <td>{movies.genre}</td>
-       <td>{movies.age}</td>
+        <>
+        <tr >
 
-       <td> 
-       {movies.showtimes.map(time =>
-        <Link to={{
-          pathname: 'purchase',
-          state: { 
-            title: movies.title,
-            id: movies._id,
-            showtime: time
-          }
-        }}> <button class="btn btn-primary" >{time} </button> <br/> </Link>)}
+        <td class="p-0">
+        <img src={require("./images/"+days.movies_array.title+".jpg")}  alt="sonic"width="150"/>
         </td>
 
-        <td>
-        <button type="button" class="btn btn-dark" 
-        onClick={()=> window.open(movies.amc, "_blank")}>Purchase with AMC</button>
-        <br/>
 
+        <table className="table">
+
+        <th class="pt-0 pb-0 bg-light" colspan="3">
+        <span class="h4">{days.theater}</span>  <span class="h5"> ({days.address}) </span>   
+        </th>
+
+        <tr>
+
+        <td width="30%">
+        <span class="h4"> {days.movies_array.title}</span>
+        <div>{days.movies_array.genre}</div>
+        <div>[{days.movies_array.age}] - {days.movies_array.length}</div>
+        <div>{days.movies_array.released}</div>
+        </td>
+
+        <td  width="40%">
+        <div class=" p-0 h2 mb-0 pl-4">
+        {days.day}
+        </div>
+
+        {days.movies_array.times.map( time =>(
+
+         <Link to={{
+          pathname: 'purchase',
+          state: { 
+            title: days.movies_array.title,
+            showtime: time,
+            theater: days.theater
+
+          }
+        }}> <button class="btn btn-primary mt-1 mr-2" >{time} </button> </Link>
+
+        ))}
+        </td>
+
+        <td >
+        <button type="button" class="btn btn-dark" 
+        onClick={()=> window.open(days.movies_array.amc, "_blank")}>Purchase with AMC</button>
+        <br/>
         <button type="button" class="btn btn-secondary" 
-        onClick={()=> window.open(movies.regal, "_blank")}>Purchase with Regal</button>
+        onClick={()=> window.open(days.movies_array.regal, "_blank")}>Purchase with Regal</button>
         </td>
 
         </tr>
 
-        ))}
-
-        </tbody>
         </table>
 
+        </tr>
+        <div class="bg-light pb-1"></div>
+        </>
+
+
         </div>
-        )
+
+        ))}
+
+      </tbody>
+      </table>
+
+      </div>
+
+      )
     }
   }

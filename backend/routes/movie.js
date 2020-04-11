@@ -2,12 +2,12 @@
 const router = require('express').Router();
 // import the model schema
 let Movie = require('../models/movie.model');
-
+let days = require('../models/days.model');
 
 // route/endpoint, handles http get requests on /user url path
 router.route('/').get((req, res) => {
-  Movie.find()
-  .then(movies => res.json(movies))
+  days.find()
+  .then(days => res.json(days))
   .catch(err => res.status(400).json('Error: ' + err));
 });
 
@@ -18,38 +18,46 @@ router.route('/search').post((req, res) => {
 
   //require mongoose for DB
   const mongoose = require('mongoose');
+//{ "$regex": search, "$options": "i" }
 
-  Movie.aggregate([{
-    $lookup: {
-        from: "movies", // collection name in db
-        localField: "title",
-        foreignField: "showtimes",
-        as: "entries"
-    }
-}]).exec(function(err, students) {
-    // students contain WorksnapsTimeEntries
-});
-
+console.log("SEARCHING FOR "+ search +" " + req.body.location)
+    //console.log(req.body.location)
     // find all user with matching email and password, return matches in result var
-    Movie.find( { "title": { "$regex": search, "$options": "i" } }, function (err, result) {
-      if (err) 
-       return handleError(err);
+    days.aggregate( 
+     [
+       // Match the "documents" that meet your criteria
+       { "$match": {
+         "movies_array.title": { "$regex": search, "$options": "i" }
+       }},
+
+       // Unwind the arrays to de-normalize as documents
+       { "$unwind": "$movies_array" },
+       { "$unwind": "$movies_array.title" },
+
+       // Match only the element(s) that meet the criteria
+       { "$match": {
+         "movies_array.title": { "$regex": search, "$options": "i" },
+        // "theater": { "$regex": req.body.location, "$options": "i" },
+      }}
+
+      ]
+
+      , function (err, result) {
+        if (err) 
+         return handleError(err);
        // if more than one matches then log user in
        if(result.length>0){
         let i;
-        let r = new Array();
+        let searchResult
         for(i=0;i<result.length;i++){
-          console.log("Found title: "+ result[i].title)
+
         }
 
-       res.send(result)
-     }
-   })
+        res.send(result)
+      }
+    })
 
-//res.redirect('http://localhost:3000')
-//let a = "GOOOOOOOO"
-//res.send(a);
-});
+  });
 
 
 module.exports = router;

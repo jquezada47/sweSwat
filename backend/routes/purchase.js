@@ -1,6 +1,6 @@
 const router = require('express').Router();
 let Ticket = require('../models/ticket.model');
-
+//{ "$regex": search, "$options": "i" }
 // Inserts a new ticket in DB
 router.route('/add').post((req, res) => {
   const name= req.body.name;

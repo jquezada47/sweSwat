@@ -5,8 +5,7 @@ import axios from 'axios';
 export default class Purchase extends Component {
 
   componentDidMount(){
-    const {handle } = this.props.match.params
-    const {title} = this.props.location.state
+
     console.log(this.props.location.state.title)
   }
 
@@ -49,12 +48,7 @@ export default class Purchase extends Component {
   onChangeCVV(e) {
     this.setState({ CVV: e.target.value})
   }
-  title(e) {
-    const {handle } = this.props.match.params
-    const {title} = this.props.location.state
-    console.log({title})
-    return {title}
-  }
+  
 
 
   onSubmit(e) {

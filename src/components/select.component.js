@@ -181,7 +181,7 @@ export default class Select extends Component {
 
 
 
-<table className="table">
+<table className="table d-flex justify-content-center">
 
     <tbody>
 

@@ -45,7 +45,7 @@ export default class MovieList extends Component {
 
   render() {
     return (
-      <table className="table ">
+      <table className="table d-flex justify-content-center">
         <tbody>
           {this.state.days.map((days) => (
             <div>

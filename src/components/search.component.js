@@ -376,7 +376,7 @@ export default class Search extends Component {
                                   address: days.address,
                                   start: this.toTime(time.start),
                                   end: this.toTime(time.end),
-                                  date: days.day,
+                                  day: days.day,
                                 },
                               }}
                             >

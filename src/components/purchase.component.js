@@ -301,7 +301,7 @@ export default class Purchase extends Component {
             <div className="form-group">
               <input
                 type="submit"
-                value="Register"
+                value="Purchase"
                 className="btn btn-primary btn-lg btn-block mt-3  mx-auto"
               />
             </div>
